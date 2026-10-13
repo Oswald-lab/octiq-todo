@@ -7,6 +7,7 @@ import App from './App';
 import './index.css';
 import { recipeChrome } from './recipes';
 import { AppErrorBoundary } from './components/AppErrorBoundary';
+import { MotionConfig } from 'framer-motion';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,10 +22,12 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter basename={getRouterBasename()}>
       <QueryClientProvider client={queryClient}>
-        <AppErrorBoundary>
-          <App />
-          {recipeChrome}
-        </AppErrorBoundary>
+        <MotionConfig reducedMotion="user">
+          <AppErrorBoundary>
+            <App />
+            {recipeChrome}
+          </AppErrorBoundary>
+        </MotionConfig>
       </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>,

@@ -14,7 +14,7 @@ recipes:
     installedAt: 2026-10-13T19:00:38.068Z
     requestedBy: design
     backend: installed
-    frontend: pending
+    frontend: installed
     files:
       - path: server/db/email-password-auth.schema.ts
         frozenSha: 9e30a967ea7d6ee4dd95fd40a97c856315206302f0a0716c1d4714a4ee25b55e
@@ -40,6 +40,40 @@ recipes:
         frozenSha: 8bcadf6be6f6f0468408bc3913b8ca10216142bc35987c031754326db3a139e3
       - path: server/recipes/email-password-auth/store.ts
         frozenSha: aff6e6acc8f2aada099332ba4e4d13ae9b32357c402a09bd11fc86ecc20cf080
+      - path: src/recipes/email-password-auth/api.ts
+        frozenSha: 695673ae7b234dfc09f859cc7004672c24630e577eadf662dc10996edb26c6c8
+      - path: src/recipes/email-password-auth/components/AuthCard.tsx
+        frozenSha: cb7f84868b6194d784a757ff2223c2b939585fd199b630c4b8afb21a6bc13737
+      - path: src/recipes/email-password-auth/components/Field.tsx
+        frozenSha: aa8d29f834b686ad5dc7190750ce37c9af52239c9e1b236fbc0e090e80af6182
+      - path: src/recipes/email-password-auth/components/MethodTabs.tsx
+        frozenSha: 0b1e37304f16274f23351e82b0985fe482f9468aa839fa912f5be381e2dd369e
+      - path: src/recipes/email-password-auth/components/PasswordForm.tsx
+        frozenSha: cdf9b009ee7fb47ecc211896ec237e7ec0748bcf2a33d02778b24fb0a71ef5f5
+      - path: src/recipes/email-password-auth/components/RequireAuth.tsx
+        frozenSha: b5d0963be2f3040048878da13874aec9b4a87d0d49c503601dc9d46750038b63
+      - path: src/recipes/email-password-auth/components/UserMenu.tsx
+        frozenSha: 9cc148f4b0bbec68fe4db2bec938659d2ce1f3aa22a1f6ed26f58fb7934fb5b9
+      - path: src/recipes/email-password-auth/display-name.ts
+        frozenSha: 16008c885378540a9a63d491e484ef14279893610602d381fb8807bb969c23a6
+      - path: src/recipes/email-password-auth/methods.ts
+        frozenSha: b641136b31e6d52e39a5098364166d38c7df638ed4a509d3843a7075bab290a6
+      - path: src/recipes/email-password-auth/pages/AccountPage.tsx
+        frozenSha: 2c5a7d3806ff6e4ee0a868dc0710c1bacde8abb169ae14a6847ab38dcc7fbd06
+      - path: src/recipes/email-password-auth/pages/LoginPage.tsx
+        frozenSha: d8824ea8002f31d46d36f955760334ae95b59407e9970d2de44f891003fb6dd3
+      - path: src/recipes/email-password-auth/pages/RegisterPage.tsx
+        frozenSha: b53a9a9b031b38dbaa9b6eec2a4d6001043aa1cef6b7d51556a6c656191a1aad
+      - path: src/recipes/email-password-auth/pages/index.ts
+        frozenSha: e72b4baa6a1fab73337b6d7d01abca8d6eaa0063980439df6f8a82db4cf33044
+      - path: src/recipes/email-password-auth/register.ts
+        frozenSha: c45e5b5f0bd09674888e13cdb1b23e29c1b26a735a30886da38d1a4701f4e592
+      - path: src/recipes/email-password-auth/registry.ts
+        frozenSha: 249e467dc4c40152befa6b763c11cd38690337ed6042a55ea298157a9c774c18
+      - path: src/recipes/email-password-auth/token-store.ts
+        frozenSha: b452bd02ba72ef85d1b4ff2614170e5e1856ccd0de7c2b0889b3e742922abaf5
+      - path: src/recipes/email-password-auth/use-auth.ts
+        frozenSha: 60b4d68b48cce0f9cfd63ace3ecf799e82bdca69a4030478dd9f45660d7e51ca
 ---
 
 # Installed recipes
@@ -52,7 +86,7 @@ codegen tools refuse a write that changes it. Add your code below the marker.
 Tables: `auth_users`. Routes: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout-all`, `GET /api/auth/me`, `PATCH /api/auth/me`, `POST /api/auth/change-password`.
 Reserved prefix `auth_` — never author a table or column starting with it.
 Roles: `admin`, `user` — a new account starts as `user`; `admin` is the platform admin role. Every role is a value of `auth_users.auth_role`, enforced by `requireRole(...)` and assigned from the admin panel. Never author a role column of your own.
-Backend: installed. Frontend: pending.
+Backend: installed. Frontend: installed.
 
 ### Provides
 Accounts with bearer sessions (access 15 min, refresh 7 d), roles (the design's `roles`, always including `admin`; the exact list is the `Roles:` line above — `import { ROLES, DEFAULT_ROLE, type Role } from './roles.generated.js'`), a `requireAuth` middleware, and pages at `/login`, `/register`, `/account`. There is no pre-made account: the first registered user becomes admin unless `AUTH_FIRST_USER_ADMIN=false`, and `AUTH_ADMIN_EMAILS` (comma list) also grants admin.
