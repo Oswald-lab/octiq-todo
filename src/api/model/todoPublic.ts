@@ -9,4 +9,6 @@
 export interface TodoPublic {
   id: string;
   title: string;
+  /** @nullable */
+  phone: string | null;
 }

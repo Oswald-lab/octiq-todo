@@ -9,4 +9,6 @@
 export interface TodoCreateInput {
   /** @minLength 1 */
   title: string;
+  /** @pattern ^\+?[1-9][0-9]{6,14}$ */
+  phone?: string;
 }

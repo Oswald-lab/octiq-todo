@@ -26,7 +26,7 @@ function requireUser(req: Request): { userId: string } {
 todosRouter.get('/', requireAuth, async (req, res) => {
   const { userId } = requireUser(req);
   const rows = await db
-    .select({ id: todos.id, title: todos.title })
+    .select({ id: todos.id, title: todos.title, phone: todos.phone })
     .from(todos)
     .where(eq(todos.ownerId, userId));
   res.json({ data: rows });
@@ -41,8 +41,8 @@ todosRouter.post('/', requireAuth, async (req, res) => {
   }
   const [created] = await db
     .insert(todos)
-    .values({ title: parsed.data.title, ownerId: userId })
-    .returning({ id: todos.id, title: todos.title });
+    .values({ title: parsed.data.title, ownerId: userId, phone: parsed.data.phone ?? null })
+    .returning({ id: todos.id, title: todos.title, phone: todos.phone });
   if (created === undefined) {
     throw Object.assign(new Error('Failed to create todo'), { statusCode: 500 });
   }
@@ -65,7 +65,7 @@ todosRouter.patch('/:id', requireAuth, async (req, res) => {
     .update(todos)
     .set({ title: parsed.data.title })
     .where(and(eq(todos.id, parsedParams.data.id), eq(todos.ownerId, userId)))
-    .returning({ id: todos.id, title: todos.title });
+    .returning({ id: todos.id, title: todos.title, phone: todos.phone });
   if (updated === undefined) {
     res.status(404).json({ error: 'Todo not found' });
     return;

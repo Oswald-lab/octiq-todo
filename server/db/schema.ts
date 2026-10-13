@@ -17,4 +17,5 @@ export const todos = pgTable('todos', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
   ownerId: text('owner_id').notNull(),
+  phone: text('phone'),
 });

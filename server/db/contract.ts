@@ -19,12 +19,20 @@ export const todoPublicSchema = z
   .object({
     id: z.string().uuid(),
     title: z.string(),
+    phone: z.string().nullable(),
   })
   .openapi('TodoPublic');
+
+const phonePattern = /^\+?[1-9][0-9]{6,14}$/;
 
 export const todoCreateInputSchema = z
   .object({
     title: z.string().trim().min(1),
+    phone: z
+      .string()
+      .trim()
+      .regex(phonePattern, 'Invalid phone number')
+      .optional(),
   })
   .openapi('TodoCreateInput');
 
