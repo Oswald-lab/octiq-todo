@@ -110,7 +110,12 @@ export function TodoItem({ todo }: TodoItemProps) {
 
   return (
     <li className="group flex items-center justify-between gap-4 py-3">
-      <span className="min-w-0 break-words text-foreground">{todo.title}</span>
+      <div className="min-w-0">
+        <span className="block break-words text-foreground">{todo.title}</span>
+        {todo.phone ? (
+          <span className="mt-1 block font-mono text-xs text-muted-foreground">{todo.phone}</span>
+        ) : null}
+      </div>
       <div className="flex shrink-0 items-center gap-1">
         <button
           type="button"
