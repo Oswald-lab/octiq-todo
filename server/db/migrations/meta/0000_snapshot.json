@@ -1,0 +1,151 @@
+{
+  "id": "6203d8c4-b6df-4ee5-a79a-f8ecac726757",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.todos": {
+      "name": "todos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.auth_users": {
+      "name": "auth_users",
+      "schema": "",
+      "columns": {
+        "auth_id": {
+          "name": "auth_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "auth_email": {
+          "name": "auth_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_phone": {
+          "name": "auth_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_password_hash": {
+          "name": "auth_password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_name": {
+          "name": "auth_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_role": {
+          "name": "auth_role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user'"
+        },
+        "auth_status": {
+          "name": "auth_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "auth_token_version": {
+          "name": "auth_token_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "auth_last_login_at": {
+          "name": "auth_last_login_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_created_at": {
+          "name": "auth_created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "auth_updated_at": {
+          "name": "auth_updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "auth_users_auth_email_unique": {
+          "name": "auth_users_auth_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "auth_email"
+          ]
+        },
+        "auth_users_auth_phone_unique": {
+          "name": "auth_users_auth_phone_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "auth_phone"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

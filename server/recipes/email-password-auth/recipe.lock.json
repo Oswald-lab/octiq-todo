@@ -1,0 +1,66 @@
+{
+  "id": "email-password-auth",
+  "version": "1.4.0",
+  "side": "backend",
+  "installedAt": "2026-10-13T19:00:38.868Z",
+  "files": [
+    {
+      "path": "server/db/email-password-auth.schema.ts",
+      "frozenSha": "9e30a967ea7d6ee4dd95fd40a97c856315206302f0a0716c1d4714a4ee25b55e"
+    },
+    {
+      "path": "server/recipes/email-password-auth/hooks.ts",
+      "frozenSha": "476013a2632c2b3bc647564afaa468b819a2de23278570f65ee36234ec9cea74"
+    },
+    {
+      "path": "server/recipes/email-password-auth/jwt.ts",
+      "frozenSha": "ac97f442d4a120b26004baf502be89088eafe6d0afa10907c24edae894e03c05"
+    },
+    {
+      "path": "server/recipes/email-password-auth/middleware.ts",
+      "frozenSha": "77830b86ba2aa484fb74aeb6bf9d60281a278cf6d3b70ce25dfcd9f32ee18afe"
+    },
+    {
+      "path": "server/recipes/email-password-auth/password.ts",
+      "frozenSha": "25a1a08ea280433fb79518ec9bb45f510db3d442907c0aa97b20effd7c89652a"
+    },
+    {
+      "path": "server/recipes/email-password-auth/provider-login.ts",
+      "frozenSha": "3a03fd33ce293ccb5c6b44a1e35c7b703af211d9098ebf324944929cfd4a0991"
+    },
+    {
+      "path": "server/recipes/email-password-auth/rate-limit.ts",
+      "frozenSha": "9376a85c56ebbe1d05545cfbb1b654415abb9a63ce829cf213cec79862f298bd"
+    },
+    {
+      "path": "server/recipes/email-password-auth/register.ts",
+      "frozenSha": "b87711dd776b44999727840d0d4497f63c33a5591cffff8b920f432c50eaf663"
+    },
+    {
+      "path": "server/recipes/email-password-auth/roles.ts",
+      "frozenSha": "5759fad86d6a9aff3ac0f50beb6a39a3c16e20021299251c4fc44aee9e645599"
+    },
+    {
+      "path": "server/recipes/email-password-auth/routes.ts",
+      "frozenSha": "e08d8fede18623f0e4ec7ee5faa8f9721bd0003f868244c860adccdd1d334c69"
+    },
+    {
+      "path": "server/recipes/email-password-auth/session.ts",
+      "frozenSha": "8bcadf6be6f6f0468408bc3913b8ca10216142bc35987c031754326db3a139e3"
+    },
+    {
+      "path": "server/recipes/email-password-auth/store.ts",
+      "frozenSha": "aff6e6acc8f2aada099332ba4e4d13ae9b32357c402a09bd11fc86ecc20cf080"
+    }
+  ],
+  "roles": {
+    "values": [
+      "admin",
+      "user"
+    ],
+    "default": "user"
+  },
+  "auth": {
+    "passwordLogin": true
+  }
+}

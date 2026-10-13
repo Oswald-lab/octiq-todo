@@ -1,0 +1,62 @@
+{
+  "name": "fullstack-app",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "packageManager": "npm@11.17.0",
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "tsx watch server/index.ts",
+    "dev:client": "vite",
+    "build": "npm run build:client && npm run build:server",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:client": "vite build",
+    "start": "node dist/server/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "openapi:export": "tsx scripts/export-openapi.ts",
+    "orval:generate": "orval",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "drizzle-orm": "^0.44.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "cors": "^2.8.5",
+    "helmet": "^8.1.0",
+    "zod": "^3.24.0",
+    "drizzle-zod": "^0.7.0",
+    "@asteasolutions/zod-to-openapi": "7.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.5.0",
+    "@tanstack/react-query": "5.80.2",
+    "lucide-react": "^0.468.0",
+    "framer-motion": "^11.0.0",
+    "pg": "^8.13.0",
+    "@electric-sql/pglite": "^0.2.15"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "vite": "^6.3.0",
+    "typescript": "^5.7.0",
+    "tsx": "4.19.0",
+    "concurrently": "^9.1.0",
+    "drizzle-kit": "^0.30.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "vitest": "^3.1.0",
+    "orval": "^7.7.0",
+    "@types/pg": "^8.11.0",
+    "@types/node": "^22.10.0"
+  },
+  "overrides": {
+    "ajv": "^8",
+    "@asyncapi/specs": "6.11.1"
+  }
+}

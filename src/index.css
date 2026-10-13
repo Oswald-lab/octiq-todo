@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* ThemeToggle flips the `dark` class on <html>. Point Tailwind's dark: variant
+   at that class instead of prefers-color-scheme, so generated code using
+   `dark:` utilities agrees with the toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic tokens. Neutral greys by design — the design agent overwrites these
+   values downstream; the token *names* are the contract. */
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-card: #ffffff;
+  --color-muted: #f5f5f5;
+  --color-border: #e5e5e5;
+  --color-ring: #0a0a0a;
+}
+
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #fafafa;
+  --color-card: #171717;
+  --color-muted: #262626;
+  --color-border: #262626;
+  --color-ring: #d4d4d4;
+}
