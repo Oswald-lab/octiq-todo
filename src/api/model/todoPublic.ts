@@ -13,4 +13,5 @@ export interface TodoPublic {
   phone: string | null;
   /** @nullable */
   dueDate: string | null;
+  position: number;
 }

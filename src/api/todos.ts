@@ -29,6 +29,7 @@ import type {
   TodoCreateInput,
   TodoListResponse,
   TodoPublic,
+  TodoReorderInput,
   TodoUpdateInput
 } from './model';
 
@@ -180,6 +181,70 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type PostApiTodosMutationBody = TodoCreateInput
     export type PostApiTodosMutationError = ErrorResponse
 
+/**
+ * @summary Reorder todos
+ */
+export const patchApiTodosReorder = (
+    todoReorderInput: TodoReorderInput,
+ options?: SecondParameter<typeof customFetch>,) => {
+      
+      
+      return customFetch<void>(
+      {url: `/api/todos/reorder`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: todoReorderInput
+    },
+      options);
+    }
+  
+
+
+
+export const getPatchApiTodosReorderMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiTodosReorder>>, TError,{data: TodoReorderInput}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiTodosReorder>>, TError,{data: TodoReorderInput}, TContext> => {
+
+const mutationKey = ['patchApiTodosReorder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiTodosReorder>>, {data: TodoReorderInput}> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchApiTodosReorder(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiTodosReorderMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiTodosReorder>>>
+    export type PatchApiTodosReorderMutationBody = TodoReorderInput
+    export type PatchApiTodosReorderMutationError = ErrorResponse
+
+    /**
+ * @summary Reorder todos
+ */
+export const usePatchApiTodosReorder = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiTodosReorder>>, TError,{data: TodoReorderInput}, TContext>, request?: SecondParameter<typeof customFetch>}
+, queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiTodosReorder>>,
+        TError,
+        {data: TodoReorderInput},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiTodosReorderMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
     /**
  * @summary Create a new todo
  */

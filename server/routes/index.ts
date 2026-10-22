@@ -7,6 +7,7 @@ import {
   todoIdParamsSchema,
   todoListResponseSchema,
   todoPublicSchema,
+  todoReorderInputSchema,
   todoUpdateInputSchema,
 } from '../db/contract.js';
 import { todosRouter } from './todos.js';
@@ -49,6 +50,23 @@ registry.registerPath({
   },
   responses: {
     201: { description: 'Created', content: { 'application/json': { schema: todoPublicSchema } } },
+    400: { description: 'Validation error', content: { 'application/json': { schema: errorResponseSchema } } },
+    401: { description: 'Unauthorized', content: { 'application/json': { schema: errorResponseSchema } } },
+  },
+});
+
+registry.registerPath({
+  method: 'patch',
+  path: '/api/todos/reorder',
+  tags: ['todos'],
+  summary: 'Reorder todos',
+  request: {
+    body: {
+      content: { 'application/json': { schema: todoReorderInputSchema } },
+    },
+  },
+  responses: {
+    204: { description: 'Todos reordered' },
     400: { description: 'Validation error', content: { 'application/json': { schema: errorResponseSchema } } },
     401: { description: 'Unauthorized', content: { 'application/json': { schema: errorResponseSchema } } },
   },

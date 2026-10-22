@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, CalendarClock, Check, Pencil, Trash2, X } from 'lucide-react';
+import { AlertTriangle, CalendarClock, Check, GripVertical, Pencil, Trash2, X } from 'lucide-react';
 import { usePatchApiTodosId, useDeleteApiTodosId, getGetApiTodosQueryKey } from '../api/todos';
 import type { TodoPublic } from '../api/model';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -8,10 +8,26 @@ import { dueDateStatus, formatDueDate } from '../lib/due-date';
 
 type TodoItemProps = {
   readonly todo: TodoPublic;
+  readonly draggable?: boolean;
+  readonly isDragging?: boolean;
+  readonly isDragOver?: boolean;
+  readonly onDragStart?: (id: string) => void;
+  readonly onDragEnter?: (id: string) => void;
+  readonly onDragEnd?: () => void;
+  readonly onDrop?: (id: string) => void;
 };
 
-/** One todo row: display, inline edit, and a confirmed delete. */
-export function TodoItem({ todo }: TodoItemProps) {
+/** One todo row: display, inline edit, drag reordering, and a confirmed delete. */
+export function TodoItem({
+  todo,
+  draggable = false,
+  isDragging = false,
+  isDragOver = false,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
+  onDrop,
+}: TodoItemProps) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(todo.title);
@@ -157,8 +173,48 @@ export function TodoItem({ todo }: TodoItemProps) {
   const status = dueDateStatus(todo.dueDate);
 
   return (
-    <li className="group flex items-center justify-between gap-4 py-3">
-      <div className="min-w-0">
+    <li
+      className={`group flex items-center justify-between gap-4 py-3${
+        isDragging ? ' opacity-50' : ''
+      }${isDragOver ? ' bg-muted/50' : ''}`}
+      draggable={draggable}
+      onDragStart={
+        draggable
+          ? (event) => {
+              event.dataTransfer.effectAllowed = 'move';
+              event.dataTransfer.setData('text/plain', todo.id);
+              onDragStart?.(todo.id);
+            }
+          : undefined
+      }
+      onDragOver={
+        draggable
+          ? (event) => {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = 'move';
+            }
+          : undefined
+      }
+      onDragEnter={draggable ? () => onDragEnter?.(todo.id) : undefined}
+      onDrop={
+        draggable
+          ? (event) => {
+              event.preventDefault();
+              onDrop?.(todo.id);
+            }
+          : undefined
+      }
+      onDragEnd={draggable ? () => onDragEnd?.() : undefined}
+    >
+      {draggable ? (
+        <span
+          aria-hidden="true"
+          className="shrink-0 cursor-grab text-muted-foreground transition-colors group-hover:text-foreground active:cursor-grabbing"
+        >
+          <GripVertical className="h-4 w-4" aria-hidden="true" />
+        </span>
+      ) : null}
+      <div className="min-w-0 flex-1">
         <span className="block break-words text-foreground">{todo.title}</span>
         <div className="mt-1 flex flex-wrap items-center gap-3">
           {todo.phone ? (

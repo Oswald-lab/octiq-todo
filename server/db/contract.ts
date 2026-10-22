@@ -21,6 +21,7 @@ export const todoPublicSchema = z
     title: z.string(),
     phone: z.string().nullable(),
     dueDate: z.string().nullable(),
+    position: z.number().int(),
   })
   .openapi('TodoPublic');
 
@@ -58,6 +59,12 @@ export const todoUpdateInputSchema = z
     dueDate: dueDateSchema.nullable().optional(),
   })
   .openapi('TodoUpdateInput');
+
+export const todoReorderInputSchema = z
+  .object({
+    ids: z.array(z.string().uuid()).min(1),
+  })
+  .openapi('TodoReorderInput');
 
 export const todoListResponseSchema = z
   .object({

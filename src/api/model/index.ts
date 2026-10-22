@@ -12,4 +12,5 @@ export * from './healthResponseStatus';
 export * from './todoCreateInput';
 export * from './todoListResponse';
 export * from './todoPublic';
+export * from './todoReorderInput';
 export * from './todoUpdateInput';

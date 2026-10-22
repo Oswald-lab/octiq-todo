@@ -1,21 +1,37 @@
 import { useState, useId } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Inbox, Search, X } from 'lucide-react';
-import { useGetApiTodos } from '../api/todos';
+import {
+  getGetApiTodosQueryKey,
+  useGetApiTodos,
+  usePatchApiTodosReorder,
+} from '../api/todos';
+import type { TodoListResponse } from '../api/model';
 import { Layout } from '../components/Layout';
 import { AddTodoForm } from '../components/AddTodoForm';
 import { TodoItem } from '../components/TodoItem';
 
 export default function TodosPage() {
+  const queryClient = useQueryClient();
   const { data, isLoading, error, refetch } = useGetApiTodos({
     query: { staleTime: 30_000 },
   });
 
+  const reorderTodos = usePatchApiTodosReorder({
+    mutation: {
+      onSettled: () => queryClient.invalidateQueries({ queryKey: getGetApiTodosQueryKey() }),
+    },
+  });
+
   const [query, setQuery] = useState('');
   const [sortBy, setSortBy] = useState<'default' | 'dueDate'>('default');
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
   const searchId = useId();
   const sortId = useId();
   const normalizedQuery = query.trim().toLowerCase();
   const todos = data?.data ?? [];
+  const canReorder = sortBy === 'default' && normalizedQuery.length === 0;
   const filteredTodos = normalizedQuery
     ? todos.filter((todo) => todo.title.toLowerCase().includes(normalizedQuery))
     : todos;
@@ -28,6 +44,38 @@ export default function TodosPage() {
           return a.dueDate.localeCompare(b.dueDate);
         })
       : filteredTodos;
+
+  function endDrag() {
+    setDraggingId(null);
+    setDragOverId(null);
+  }
+
+  function handleDrop(targetId: string) {
+    if (!canReorder || draggingId === null || draggingId === targetId) {
+      endDrag();
+      return;
+    }
+    const ids = todos.map((todo) => todo.id);
+    const fromIndex = ids.indexOf(draggingId);
+    const toIndex = ids.indexOf(targetId);
+    if (fromIndex === -1 || toIndex === -1) {
+      endDrag();
+      return;
+    }
+    const nextIds = [...ids];
+    nextIds.splice(fromIndex, 1);
+    nextIds.splice(toIndex, 0, draggingId);
+    queryClient.setQueryData<TodoListResponse>(getGetApiTodosQueryKey(), (previous) => {
+      if (previous === undefined) return previous;
+      const reordered = nextIds.flatMap((id) => {
+        const todo = previous.data.find((item) => item.id === id);
+        return todo === undefined ? [] : [todo];
+      });
+      return { data: reordered };
+    });
+    reorderTodos.mutate({ data: { ids: nextIds } });
+    endDrag();
+  }
 
   return (
     <Layout>
@@ -97,7 +145,17 @@ export default function TodosPage() {
             ) : (
               <ul className="divide-y divide-border border-t border-border">
                 {visibleTodos.map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} />
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    draggable={canReorder}
+                    isDragging={draggingId === todo.id}
+                    isDragOver={dragOverId === todo.id && draggingId !== todo.id}
+                    onDragStart={(id) => setDraggingId(id)}
+                    onDragEnter={(id) => setDragOverId(id)}
+                    onDragEnd={endDrag}
+                    onDrop={handleDrop}
+                  />
                 ))}
               </ul>
             )}
