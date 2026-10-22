@@ -20,10 +20,25 @@ export const todoPublicSchema = z
     id: z.string().uuid(),
     title: z.string(),
     phone: z.string().nullable(),
+    dueDate: z.string().nullable(),
   })
   .openapi('TodoPublic');
 
 const phonePattern = /^\+?[1-9][0-9]{6,14}$/;
+
+const dueDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+const dueDateSchema = z.string().trim().regex(dueDatePattern, 'Invalid date');
+
+export function isValidDueDate(value: string): boolean {
+  const [year, month, day] = value.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  );
+}
 
 export const todoCreateInputSchema = z
   .object({
@@ -33,12 +48,14 @@ export const todoCreateInputSchema = z
       .trim()
       .regex(phonePattern, 'Invalid phone number')
       .optional(),
+    dueDate: dueDateSchema.optional(),
   })
   .openapi('TodoCreateInput');
 
 export const todoUpdateInputSchema = z
   .object({
-    title: z.string().trim().min(1),
+    title: z.string().trim().min(1).optional(),
+    dueDate: dueDateSchema.nullable().optional(),
   })
   .openapi('TodoUpdateInput');
 

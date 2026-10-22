@@ -58,7 +58,7 @@ registry.registerPath({
   method: 'patch',
   path: '/api/todos/{id}',
   tags: ['todos'],
-  summary: "Update a todo's title",
+  summary: "Update a todo's title or due date",
   request: {
     params: todoIdParamsSchema,
     body: {

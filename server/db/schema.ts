@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { date, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Domain tables are appended by the technical-design / backend codegen steps.
 // This no-auth starter intentionally has no `users` table.
@@ -18,4 +18,5 @@ export const todos = pgTable('todos', {
   title: text('title').notNull(),
   ownerId: text('owner_id').notNull(),
   phone: text('phone'),
+  dueDate: date('due_date'),
 });

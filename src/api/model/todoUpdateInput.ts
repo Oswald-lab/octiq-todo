@@ -8,5 +8,7 @@
 
 export interface TodoUpdateInput {
   /** @minLength 1 */
-  title: string;
+  title?: string;
+  /** @nullable */
+  dueDate?: string | null;
 }

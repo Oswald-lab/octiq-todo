@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Check, Pencil, Trash2, X } from 'lucide-react';
+import { AlertTriangle, CalendarClock, Check, Pencil, Trash2, X } from 'lucide-react';
 import { usePatchApiTodosId, useDeleteApiTodosId, getGetApiTodosQueryKey } from '../api/todos';
 import type { TodoPublic } from '../api/model';
 import { ConfirmDialog } from './ConfirmDialog';
+import { dueDateStatus, formatDueDate } from '../lib/due-date';
 
 type TodoItemProps = {
   readonly todo: TodoPublic;
@@ -14,6 +15,7 @@ export function TodoItem({ todo }: TodoItemProps) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(todo.title);
+  const [draftDueDate, setDraftDueDate] = useState(todo.dueDate ?? '');
   const [error, setError] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -31,6 +33,7 @@ export function TodoItem({ todo }: TodoItemProps) {
 
   function startEdit() {
     setDraft(todo.title);
+    setDraftDueDate(todo.dueDate ?? '');
     setError(null);
     setEditing(true);
   }
@@ -38,6 +41,7 @@ export function TodoItem({ todo }: TodoItemProps) {
   function cancelEdit() {
     setEditing(false);
     setDraft(todo.title);
+    setDraftDueDate(todo.dueDate ?? '');
     setError(null);
   }
 
@@ -48,9 +52,28 @@ export function TodoItem({ todo }: TodoItemProps) {
       setError('A title is required.');
       return;
     }
+    const nextDueDate = draftDueDate.length > 0 ? draftDueDate : null;
+    if (nextDueDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(nextDueDate)) {
+      setError('Enter a valid due date.');
+      return;
+    }
+
+    const changes: { title?: string; dueDate?: string | null } = {};
+    if (trimmed !== todo.title) {
+      changes.title = trimmed;
+    }
+    if (nextDueDate !== todo.dueDate) {
+      changes.dueDate = nextDueDate;
+    }
+
+    if (changes.title === undefined && changes.dueDate === undefined) {
+      setEditing(false);
+      return;
+    }
+
     setError(null);
     updateTodo.mutate(
-      { id: todo.id, data: { title: trimmed } },
+      { id: todo.id, data: changes },
       {
         onSuccess: () => setEditing(false),
         onError: () => setError('Could not save that todo. Please try again.'),
@@ -98,6 +121,29 @@ export function TodoItem({ todo }: TodoItemProps) {
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
+          <div className="flex items-end gap-2">
+            <div className="flex-1">
+              <label htmlFor={`todo-${todo.id}-due-date`} className="mb-1 block text-sm text-muted-foreground">
+                Due date (optional)
+              </label>
+              <input
+                id={`todo-${todo.id}-due-date`}
+                type="date"
+                value={draftDueDate}
+                onChange={(event) => setDraftDueDate(event.currentTarget.value)}
+                className="input w-full"
+              />
+            </div>
+            {draftDueDate ? (
+              <button
+                type="button"
+                onClick={() => setDraftDueDate('')}
+                className="inline-flex h-11 shrink-0 items-center justify-center rounded-md px-3 text-sm text-muted-foreground transition-opacity hover:bg-muted"
+              >
+                Clear
+              </button>
+            ) : null}
+          </div>
           {error ? (
             <p id={`todo-${todo.id}-error`} role="alert" className="text-sm text-destructive">
               {error}
@@ -108,13 +154,39 @@ export function TodoItem({ todo }: TodoItemProps) {
     );
   }
 
+  const status = dueDateStatus(todo.dueDate);
+
   return (
     <li className="group flex items-center justify-between gap-4 py-3">
       <div className="min-w-0">
         <span className="block break-words text-foreground">{todo.title}</span>
-        {todo.phone ? (
-          <span className="mt-1 block font-mono text-xs text-muted-foreground">{todo.phone}</span>
-        ) : null}
+        <div className="mt-1 flex flex-wrap items-center gap-3">
+          {todo.phone ? (
+            <span className="block font-mono text-xs text-muted-foreground">{todo.phone}</span>
+          ) : null}
+          {todo.dueDate ? (
+            <span
+              className={
+                status === 'overdue'
+                  ? 'inline-flex items-center gap-1 text-xs font-medium text-destructive'
+                  : status === 'today'
+                    ? 'inline-flex items-center gap-1 text-xs font-medium text-foreground'
+                    : 'inline-flex items-center gap-1 text-xs text-muted-foreground'
+              }
+            >
+              {status === 'overdue' ? (
+                <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
+              ) : (
+                <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
+              )}
+              {status === 'overdue'
+                ? `Overdue — ${formatDueDate(todo.dueDate)}`
+                : status === 'today'
+                  ? `Due today — ${formatDueDate(todo.dueDate)}`
+                  : `Due ${formatDueDate(todo.dueDate)}`}
+            </span>
+          ) : null}
+        </div>
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <button

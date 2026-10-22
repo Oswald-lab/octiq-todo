@@ -11,12 +11,23 @@ export default function TodosPage() {
   });
 
   const [query, setQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'default' | 'dueDate'>('default');
   const searchId = useId();
+  const sortId = useId();
   const normalizedQuery = query.trim().toLowerCase();
   const todos = data?.data ?? [];
-  const visibleTodos = normalizedQuery
+  const filteredTodos = normalizedQuery
     ? todos.filter((todo) => todo.title.toLowerCase().includes(normalizedQuery))
     : todos;
+  const visibleTodos =
+    sortBy === 'dueDate'
+      ? [...filteredTodos].sort((a, b) => {
+          if (a.dueDate === null && b.dueDate === null) return 0;
+          if (a.dueDate === null) return 1;
+          if (b.dueDate === null) return -1;
+          return a.dueDate.localeCompare(b.dueDate);
+        })
+      : filteredTodos;
 
   return (
     <Layout>
@@ -32,11 +43,11 @@ export default function TodosPage() {
             <AddTodoForm />
           </div>
 
-          <div className="mt-10">
+          <div className="mt-10 flex flex-col gap-2 sm:flex-row sm:items-center">
             <label htmlFor={searchId} className="sr-only">
               Search todos
             </label>
-            <div className="relative">
+            <div className="relative flex-1">
               <Search
                 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
@@ -60,6 +71,18 @@ export default function TodosPage() {
                 </button>
               ) : null}
             </div>
+            <label htmlFor={sortId} className="sr-only">
+              Sort todos
+            </label>
+            <select
+              id={sortId}
+              value={sortBy}
+              onChange={(event) => setSortBy(event.currentTarget.value === 'dueDate' ? 'dueDate' : 'default')}
+              className="rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
+            >
+              <option value="default">Default order</option>
+              <option value="dueDate">Due date (soonest)</option>
+            </select>
           </div>
 
           <div className="mt-6">
