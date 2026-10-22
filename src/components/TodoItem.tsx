@@ -104,7 +104,7 @@ export function TodoItem({
 
   if (editing) {
     return (
-      <li className="py-3">
+      <li className="rounded-xl border border-border bg-card px-4 py-4">
         <form onSubmit={saveEdit} noValidate className="space-y-2">
           <label htmlFor={`todo-${todo.id}`} className="sr-only">
             Edit todo
@@ -174,9 +174,9 @@ export function TodoItem({
 
   return (
     <li
-      className={`group flex items-center justify-between gap-4 py-3${
+      className={`group flex items-center justify-between gap-4 rounded-xl border bg-card px-4 py-4 transition-colors${
         isDragging ? ' opacity-50' : ''
-      }${isDragOver ? ' bg-muted/50' : ''}`}
+      }${isDragOver ? ' border-primary bg-primary/5' : ' border-border hover:border-ring/60'}`}
       draggable={draggable}
       onDragStart={
         draggable

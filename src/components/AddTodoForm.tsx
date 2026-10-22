@@ -58,7 +58,16 @@ export function AddTodoForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-3">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="rounded-xl border border-border bg-card p-4 shadow-xs sm:p-5"
+    >
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-base font-semibold text-foreground">New task</h2>
+        <span className="text-xs text-muted-foreground">Press Add to save</span>
+      </div>
+
       <label htmlFor="new-todo" className="sr-only">
         New todo
       </label>
@@ -78,56 +87,60 @@ export function AddTodoForm() {
           type="submit"
           disabled={createTodo.isPending}
           aria-busy={createTodo.isPending}
-          className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium text-foreground transition-opacity hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           {createTodo.isPending ? 'Adding…' : 'Add'}
         </button>
       </div>
       {titleError ? (
-        <p id="new-todo-error" role="alert" className="text-sm text-destructive">
+        <p id="new-todo-error" role="alert" className="mt-2 text-sm text-destructive">
           {titleError}
         </p>
       ) : null}
 
-      <label htmlFor="new-todo-phone" className="sr-only">
-        Phone (optional)
-      </label>
-      <input
-        id="new-todo-phone"
-        type="tel"
-        value={phone}
-        onChange={(event) => setPhone(event.currentTarget.value)}
-        placeholder="Phone (optional)"
-        autoComplete="tel"
-        aria-invalid={!!phoneError}
-        aria-describedby={phoneError ? 'new-todo-phone-error' : undefined}
-        className="input"
-      />
-      {phoneError ? (
-        <p id="new-todo-phone-error" role="alert" className="text-sm text-destructive">
-          {phoneError}
-        </p>
-      ) : null}
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+          <label htmlFor="new-todo-phone" className="mb-1 block text-xs font-medium text-muted-foreground">
+            Phone (optional)
+          </label>
+          <input
+            id="new-todo-phone"
+            type="tel"
+            value={phone}
+            onChange={(event) => setPhone(event.currentTarget.value)}
+            placeholder="+1 555 010 0100"
+            autoComplete="tel"
+            aria-invalid={!!phoneError}
+            aria-describedby={phoneError ? 'new-todo-phone-error' : undefined}
+            className="input"
+          />
+          {phoneError ? (
+            <p id="new-todo-phone-error" role="alert" className="mt-1 text-sm text-destructive">
+              {phoneError}
+            </p>
+          ) : null}
+        </div>
 
-      <div>
-        <label htmlFor="new-todo-due-date" className="mb-1 block text-sm text-muted-foreground">
-          Due date (optional)
-        </label>
-        <input
-          id="new-todo-due-date"
-          type="date"
-          value={dueDate}
-          onChange={(event) => setDueDate(event.currentTarget.value)}
-          aria-invalid={!!dueDateError}
-          aria-describedby={dueDateError ? 'new-todo-due-date-error' : undefined}
-          className="input"
-        />
-        {dueDateError ? (
-          <p id="new-todo-due-date-error" role="alert" className="mt-1 text-sm text-destructive">
-            {dueDateError}
-          </p>
-        ) : null}
+        <div>
+          <label htmlFor="new-todo-due-date" className="mb-1 block text-xs font-medium text-muted-foreground">
+            Due date (optional)
+          </label>
+          <input
+            id="new-todo-due-date"
+            type="date"
+            value={dueDate}
+            onChange={(event) => setDueDate(event.currentTarget.value)}
+            aria-invalid={!!dueDateError}
+            aria-describedby={dueDateError ? 'new-todo-due-date-error' : undefined}
+            className="input"
+          />
+          {dueDateError ? (
+            <p id="new-todo-due-date-error" role="alert" className="mt-1 text-sm text-destructive">
+              {dueDateError}
+            </p>
+          ) : null}
+        </div>
       </div>
     </form>
   );
